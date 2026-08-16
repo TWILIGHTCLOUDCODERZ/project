@@ -2,29 +2,60 @@
 
 > An AI-powered retail platform built on Google Gemini. Customers can visualise blazers and formal wear on their own photo using Gemini 3.1 Flash Lite Image, search with natural language, receive personalized recommendations, and build complete outfits — while sellers manage their business through an AI-powered dashboard.
 
-**Created by:** Deepan Raj — Senior Solution Architect (Azure, AWS & GCP)
-**Organization:** TCC RAPTOR
-**Contact:** deepanraj.vellingiri@tccraptor.com
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Cloud_Run-1a7f37?logo=googlecloud&logoColor=white)](https://tcc-raptor-retail-ru2czwsr6a-el.a.run.app)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Gemini](https://img.shields.io/badge/Gemini_3.1_Flash-4285F4?logo=googlegemini&logoColor=white)](https://ai.google.dev)
+
+**🔗 Live:** <https://tcc-raptor-retail-ru2czwsr6a-el.a.run.app>
+
+**Created by** Deepan Raj — Senior Solution Architect (Azure, AWS & GCP) · **TCC RAPTOR** · [deepanraj.vellingiri@tccraptor.com](mailto:deepanraj.vellingiri@tccraptor.com)
+
+---
+
+## At a Glance
+
+| | |
+|---|---|
+| **What** | AI retail storefront + seller dashboard with virtual try-on |
+| **AI** | Google Gemini 3.1 Flash Lite Image |
+| **Frontend** | React 18 · TypeScript · Vite · Tailwind CSS · React Router |
+| **Backend** | Firebase (Firestore · Auth · FCM · Storage) |
+| **Hosting** | Google Cloud Run — Nginx, scale-to-zero |
+| **CI/CD** | GitHub → Cloud Build → Cloud Run |
+| **Docs** | [ARCHITECTURE.md](./ARCHITECTURE.md) · [DEPLOYMENT.md](./DEPLOYMENT.md) |
 
 ---
 
 ## Table of Contents
 
+**Product**
 - [Project Overview](#project-overview)
-- [Services & Infrastructure](#services--infrastructure)
-- [Middleware & APIs](#middleware--apis)
-- [Frontend Framework](#frontend-framework)
+- [Key Features](#key-features)
 - [User Experience Flow](#user-experience-flow)
 - [Seller Dashboard Flow](#seller-dashboard-flow)
+
+**AI Capabilities**
 - [AI-Powered Search](#ai-powered-search)
 - [Product Recommendations](#product-recommendations)
 - [AI Virtual Try-On](#ai-virtual-try-on)
 - [Multi-Agent Architecture](#multi-agent-architecture)
+
+**Engineering**
+- [Services & Infrastructure](#services--infrastructure)
+- [Middleware & APIs](#middleware--apis)
+- [Frontend Framework](#frontend-framework)
 - [Architecture Diagram](#architecture-diagram)
-- [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
+
+**Operate**
 - [Getting Started](#getting-started)
+- [Deployment & CI/CD](#deployment--cicd)
 - [Project Structure](#project-structure)
+- [Documentation](#documentation)
+- [License](#license)
 
 ---
 
@@ -48,86 +79,19 @@ Retail return rates are driven by fit uncertainty. By letting shoppers "wear" it
 
 ---
 
-## Services & Infrastructure
+## Key Features
 
-### Google Cloud Run Deployment
-
-The application is containerized and deployed on Google Cloud Run, providing auto-scaling, serverless execution, and zero-downtime deployments. Cloud Run handles traffic spikes automatically and scales to zero when idle, optimizing cost.
-
-### Firebase Authentication & Authorization
-
-Firebase Auth manages user identity with email/password authentication. JWT tokens are issued and validated on every request. Role-based access control (RBAC) separates customer and seller permissions — sellers gain dashboard access only through authorized accounts.
-
-### Firestore — Customer Segment Tracking
-
-Firestore NoSQL database stores customer profiles, purchase history, browsing behavior, and segment assignments. Each user is tagged with segments (e.g., "frequent buyer", "blazer enthusiast") that drive personalized recommendations and targeted notifications.
-
-### Firebase Cloud Messaging (FCM)
-
-FCM delivers push notifications for two key scenarios:
-
-1. **Product suggestions** — personalized recommendations sent when new arrivals match a customer's segment
-2. **Abandoned cart reminders** — gentle nudges when a user leaves items in their cart without completing checkout
-
-### Firebase Backend Database
-
-Firebase serves as the primary backend database layer:
-
-- **Firestore** — structured data (users, products, orders, cart, segments)
-- **Firebase Storage** — media (product images, user uploads, AI-generated try-on results)
-- **Real-time listeners** — live cart and inventory updates
-
-### AI Image Generation — Gemini 3.1 Flash Lite Image
-
-Google Gemini 3.1 Flash Lite Image powers the virtual try-on feature. It takes a user photo and a garment image, then generates a photorealistic composite of the person wearing the item. Built-in safety filters validate all inputs and outputs for responsible AI use.
-
----
-
-## Middleware & APIs
-
-The middleware layer sits between the React frontend and the Firebase/Gemini backend services. It handles authentication, request orchestration, business logic, and data transformation before anything reaches the database or AI models.
-
-| Service | Description |
+| Feature | Description |
 |---|---|
-| **Auth Middleware** | Validates Firebase JWT tokens on every API request, injects the authenticated user into the request context, and rejects unauthorized calls. |
-| **Search Orchestration** | Receives natural-language queries, calls the AI intent parser, routes to the recommendation engine, and assembles complete outfit responses. |
-| **Recommendation Engine** | Reads customer segments and purchase history from Firestore, matches against product metadata, and returns scored complementary items with discount logic. |
-| **Image Generation Pipeline** | Manages the try-on workflow: accepts user photo uploads, validates content safety, calls Gemini 3.1 Flash Lite Image, stores results in Firebase Storage, and returns signed URLs. |
-| **Notification Dispatcher** | Listens to Firestore triggers for cart abandonment and new arrivals, composes notification payloads, and sends via FCM to the right customer segments. |
-| **Cart & Order Service** | Manages cart state, validates inventory, processes checkout, writes order records to Firestore, and triggers downstream events (confirmation, segment update, recommendation refresh). |
-
----
-
-## Frontend Framework
-
-### Core Framework
-
-- **React 18** — component-based UI with hooks
-- **TypeScript** — type-safe development
-- **Vite** — fast HMR dev server & build tool
-- **Tailwind CSS** — utility-first styling
-- **React Router** — client-side routing
-
-### State & Context
-
-- **AuthContext** — Firebase auth state management
-- **CartContext** — shopping cart state
-- **SellerAuthContext** — seller session management
-- **React hooks** — useState, useEffect, useCallback
-
-### UI Libraries
-
-- **Lucide React** — icon system
-- **Tailwind** — custom color ramps & 8px spacing system
-- Responsive breakpoints (mobile → desktop)
-- Micro-interactions & hover states
-
-### AI Integration
-
-- **Gemini API** — image generation calls
-- **aiSearch.ts** — intent parsing & scoring engine
-- Client-side recommendation logic
-- MediaPipe Hands (WASM) for AR tracking
+| **AI-Powered Natural-Language Search** | Users type conversational queries and receive complete outfit recommendations, not just keyword matches. |
+| **Personalized Recommendations** | Purchase history and customer segments drive tailored product suggestions with individualized discounts. |
+| **AI Virtual Try-On** | Gemini 3.1 Flash Lite Image renders photorealistic outfit composites from a single user photo — no green screen required. |
+| **Outfit Builder** | AI-suggested accessories (vest, trousers, shoes, bag) can be toggled individually to compose and visualise a full look. |
+| **AI Seller Dashboard** | A complete command center with sales analytics, AI forecasting, dynamic pricing, and an AI copilot assistant. |
+| **Smart Notifications** | FCM-powered push notifications for abandoned cart reminders and personalized product suggestions. |
+| **Responsive Product Catalog** | Filterable, paginated catalog across Men and Women categories with Quick View modals. |
+| **Gemini Safety Filters** | Every generation request passes through Gemini built-in safety filters for responsible AI output. |
+| **Full-Size Image Viewer** | Generated try-on results can be viewed at full resolution in an immersive lightbox. |
 
 ---
 
@@ -248,6 +212,89 @@ Notification Agent → Seller Copilot Agent → Firebase & Gemini Services
 
 ---
 
+## Services & Infrastructure
+
+### Google Cloud Run Deployment
+
+The application is containerized and deployed on Google Cloud Run, providing auto-scaling, serverless execution, and zero-downtime deployments. Cloud Run handles traffic spikes automatically and scales to zero when idle, optimizing cost.
+
+### Firebase Authentication & Authorization
+
+Firebase Auth manages user identity with email/password authentication. JWT tokens are issued and validated on every request. Role-based access control (RBAC) separates customer and seller permissions — sellers gain dashboard access only through authorized accounts.
+
+### Firestore — Customer Segment Tracking
+
+Firestore NoSQL database stores customer profiles, purchase history, browsing behavior, and segment assignments. Each user is tagged with segments (e.g., "frequent buyer", "blazer enthusiast") that drive personalized recommendations and targeted notifications.
+
+### Firebase Cloud Messaging (FCM)
+
+FCM delivers push notifications for two key scenarios:
+
+1. **Product suggestions** — personalized recommendations sent when new arrivals match a customer's segment
+2. **Abandoned cart reminders** — gentle nudges when a user leaves items in their cart without completing checkout
+
+### Firebase Backend Database
+
+Firebase serves as the primary backend database layer:
+
+- **Firestore** — structured data (users, products, orders, cart, segments)
+- **Firebase Storage** — media (product images, user uploads, AI-generated try-on results)
+- **Real-time listeners** — live cart and inventory updates
+
+### AI Image Generation — Gemini 3.1 Flash Lite Image
+
+Google Gemini 3.1 Flash Lite Image powers the virtual try-on feature. It takes a user photo and a garment image, then generates a photorealistic composite of the person wearing the item. Built-in safety filters validate all inputs and outputs for responsible AI use.
+
+---
+
+## Middleware & APIs
+
+The middleware layer sits between the React frontend and the Firebase/Gemini backend services. It handles authentication, request orchestration, business logic, and data transformation before anything reaches the database or AI models.
+
+| Service | Description |
+|---|---|
+| **Auth Middleware** | Validates Firebase JWT tokens on every API request, injects the authenticated user into the request context, and rejects unauthorized calls. |
+| **Search Orchestration** | Receives natural-language queries, calls the AI intent parser, routes to the recommendation engine, and assembles complete outfit responses. |
+| **Recommendation Engine** | Reads customer segments and purchase history from Firestore, matches against product metadata, and returns scored complementary items with discount logic. |
+| **Image Generation Pipeline** | Manages the try-on workflow: accepts user photo uploads, validates content safety, calls Gemini 3.1 Flash Lite Image, stores results in Firebase Storage, and returns signed URLs. |
+| **Notification Dispatcher** | Listens to Firestore triggers for cart abandonment and new arrivals, composes notification payloads, and sends via FCM to the right customer segments. |
+| **Cart & Order Service** | Manages cart state, validates inventory, processes checkout, writes order records to Firestore, and triggers downstream events (confirmation, segment update, recommendation refresh). |
+
+---
+
+## Frontend Framework
+
+### Core Framework
+
+- **React 18** — component-based UI with hooks
+- **TypeScript** — type-safe development
+- **Vite** — fast HMR dev server & build tool
+- **Tailwind CSS** — utility-first styling
+- **React Router** — client-side routing
+
+### State & Context
+
+- **AuthContext** — Firebase auth state management
+- **CartContext** — shopping cart state
+- **SellerAuthContext** — seller session management
+- **React hooks** — useState, useEffect, useCallback
+
+### UI Libraries
+
+- **Lucide React** — icon system
+- **Tailwind** — custom color ramps & 8px spacing system
+- Responsive breakpoints (mobile → desktop)
+- Micro-interactions & hover states
+
+### AI Integration
+
+- **Gemini API** — image generation calls
+- **aiSearch.ts** — intent parsing & scoring engine
+- Client-side recommendation logic
+- MediaPipe Hands (WASM) for AR tracking
+
+---
+
 ## Architecture Diagram
 
 The platform follows a layered architecture:
@@ -257,23 +304,9 @@ The platform follows a layered architecture:
 3. **API & Business Processing** — API Management enforces rate limiting, API security and versioning. Serverless functions execute tasks — image upload processing, outfit recommendation workflows, image generation pipelines, cart processing and background jobs. Message queues decouple image generation, recommendation and notification workloads.
 4. **AI & Intelligence Layer** — Google Gemini orchestrates Gemini 3.1 Flash Lite Image for Virtual Try-On rendering, outfit visualisation, and product preview generation. Gemini built-in safety filters validate every prompt and image before and after generation.
 5. **Data & Storage Layer** — Object storage holds uploaded user images, generated results, product images and avatars. SQL Database stores Users, Orders, Cart, Products and Transactions. Cache accelerates user sessions, recommendation caching and product data.
-6. **Observability, Security & DevOps** — Monitoring tracks API performance, token usage and security events. Secret manager secures API keys and certificates. Cloud security provides threat detection, compliance and vulnerability management. GitHub Actions drives CI/CD through automated build → test → deploy pipelines targeting the web app, functions, AI services and storage.
+6. **Observability, Security & DevOps** — Monitoring tracks API performance, token usage and security events. Secret Manager secures API keys and certificates. Cloud security provides threat detection, compliance and vulnerability management. A GitHub-triggered Cloud Build pipeline drives CI/CD through automated build → deploy pipelines targeting Cloud Run.
 
----
-
-## Key Features
-
-| Feature | Description |
-|---|---|
-| **AI-Powered Natural-Language Search** | Users type conversational queries and receive complete outfit recommendations, not just keyword matches. |
-| **Personalized Recommendations** | Purchase history and customer segments drive tailored product suggestions with individualized discounts. |
-| **AI Virtual Try-On** | Gemini 3.1 Flash Lite Image renders photorealistic outfit composites from a single user photo — no green screen required. |
-| **Outfit Builder** | AI-suggested accessories (vest, trousers, shoes, bag) can be toggled individually to compose and visualise a full look. |
-| **AI Seller Dashboard** | A complete command center with sales analytics, AI forecasting, dynamic pricing, and an AI copilot assistant. |
-| **Smart Notifications** | FCM-powered push notifications for abandoned cart reminders and personalized product suggestions. |
-| **Responsive Product Catalog** | Filterable, paginated catalog across Men and Women categories with Quick View modals. |
-| **Gemini Safety Filters** | Every generation request passes through Gemini built-in safety filters for responsible AI output. |
-| **Full-Size Image Viewer** | Generated try-on results can be viewed at full resolution in an immersive lightbox. |
+> 📐 For the **as-built** deployment architecture — the actual Cloud Run + Cloud Build + Secret Manager pipeline, with diagrams — see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ---
 
@@ -285,6 +318,8 @@ The platform follows a layered architecture:
 | **AI Generation** | Google Gemini 3.1 Flash Lite Image |
 | **Backend** | Firebase (Firestore, Auth, FCM, Storage) |
 | **Deployment** | Google Cloud Run |
+| **CI/CD** | GitHub → Cloud Build → Artifact Registry → Cloud Run |
+| **Secrets** | Google Secret Manager |
 | **AR Tracking** | MediaPipe Hands (WASM, browser-native) |
 | **Safety** | Gemini built-in safety filters |
 
@@ -302,6 +337,16 @@ The platform follows a layered architecture:
 ```bash
 npm install
 ```
+
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+VITE_GEMINI_API_KEY=your_gemini_api_key
+```
+
+This key powers the Virtual Try-On feature. It is a **build-time** variable — in production it is injected from Google Secret Manager during the Cloud Build step (see [DEPLOYMENT.md](./DEPLOYMENT.md)). Never commit `.env`; it is git-ignored.
 
 ### Development
 
@@ -329,7 +374,40 @@ npm run lint
 
 ---
 
+## Deployment & CI/CD
+
+The app is containerized with a multi-stage Docker build (Node build → Nginx serve) and runs on **Google Cloud Run**. Every push to `main` automatically builds and deploys through **Cloud Build**, with the Gemini key injected at build time from **Secret Manager**.
+
+```bash
+git push origin main   # → Cloud Build → new Cloud Run revision (~4 min)
+```
+
+| | |
+|---|---|
+| **Live URL** | <https://tcc-raptor-retail-ru2czwsr6a-el.a.run.app> |
+| **Region** | `asia-south1` |
+| **Trigger** | `deploy-tcc-raptor` (push to `main`) |
+| **Pipeline** | [`cloudbuild.yaml`](./cloudbuild.yaml) |
+
+- **Step-by-step runbook:** [DEPLOYMENT.md](./DEPLOYMENT.md)
+- **How the pipeline & runtime work (with diagrams):** [ARCHITECTURE.md](./ARCHITECTURE.md)
+
+---
+
 ## Project Structure
+
+```
+.
+├── src/                     # Application source (detailed below)
+├── Dockerfile               # Multi-stage build → Nginx (port 8080)
+├── nginx.conf               # Static serving, gzip, SPA fallback, security headers
+├── cloudbuild.yaml          # CI/CD pipeline: build → push → deploy
+├── DEPLOYMENT.md            # Deployment runbook (GCP → Secret Manager → Cloud Run)
+├── ARCHITECTURE.md          # As-built architecture & pipeline docs (diagrams)
+├── vite.config.ts           # Vite configuration
+├── tailwind.config.js       # Tailwind theme & tokens
+└── tsconfig*.json           # TypeScript configuration
+```
 
 ```
 src/
@@ -364,7 +442,7 @@ src/
 │       ├── AICopilot.tsx           # Conversational AI seller assistant
 │       ├── AIForecast.tsx          # Demand & trend forecasting
 │       ├── DynamicPricing.tsx      # AI-driven pricing recommendations
-│       ├── SalesPerformance.tsx     # Sales analytics dashboard
+│       ├── SalesPerformance.tsx    # Sales analytics dashboard
 │       ├── SellerHome.tsx          # Seller dashboard home
 │       ├── SellerLayout.tsx        # Seller dashboard layout shell
 │       └── SellerLoginPage.tsx     # Seller login page
@@ -373,6 +451,15 @@ src/
 ├── main.tsx                        # App entry point
 └── index.css                       # Global styles & Tailwind config
 ```
+
+---
+
+## Documentation
+
+| Document | What's inside |
+|---|---|
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | As-built architecture — the deploy pipeline & runtime with diagrams, build-time secret handling, and the IAM model. |
+| [DEPLOYMENT.md](./DEPLOYMENT.md) | Step-by-step deploy runbook — GCP setup, Secret Manager, Artifact Registry, Cloud Build trigger, and Cloud Run. |
 
 ---
 
@@ -386,6 +473,4 @@ This project is proprietary to TCC RAPTOR. All rights reserved.
 
 **Deepan Raj** — Senior Solution Architect (Azure, AWS & GCP)
 TCC RAPTOR
-deepanraj.vellingiri@tccraptor.com
-#   p r o j e c t  
- 
+[deepanraj.vellingiri@tccraptor.com](mailto:deepanraj.vellingiri@tccraptor.com)
