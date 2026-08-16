@@ -156,17 +156,7 @@ One extra link makes triggered builds work: the Cloud Build service agent is gra
 
 ---
 
-## 6. Local machine note (Norton / TLS)
 
-Norton 360 on the build machine intercepts HTTPS and re-signs it with its own certificate. Browsers accept that (it's in the Windows trust store), but command-line tools that ship their own certificate bundle reject it. Two fixes were applied:
-
-- **git → schannel:** `git config --global http.sslBackend schannel` makes git trust the Windows certificate store.
-- **gcloud → validation off:** `gcloud config set auth/disable_ssl_validation true` — a local-only setting; reverse it once Norton's HTTPS scanning is off.
-
-> [!IMPORTANT]
-> None of this affects the deployed app or the CI/CD pipeline — **those run in Google's cloud**, far from the laptop's antivirus. The workaround only matters for running `gcloud` locally.
-
----
 
 ## Resource reference
 
