@@ -86,7 +86,7 @@ flowchart LR
 
 ## 3. Where the Gemini key actually goes
 
-This is the one thing worth understanding precisely. Because the app is a static site compiled by **Vite**, any variable named `VITE_*` is **inlined into the JavaScript at build time**. Secret Manager protects the key in your *source and build* — but it cannot hide a value that, by design, ships to the browser.
+This is the one thing worth understanding precisely. Because the app is a static site compiled by **Vite**, any variable named `VITE_*` is **inlined into the JavaScript at build time**. 
 
 ```mermaid
 flowchart LR
@@ -104,17 +104,12 @@ flowchart LR
 
 **So what does Secret Manager buy you?** Real benefits — just not secrecy-from-users:
 
-- **Out of git** — the key is never committed (`.env` is git-ignored).
+- **Out of git** — the key is never committed .
 - **Centralized** — rotate it in one place; the pipeline always reads `:latest`.
 - **Access-controlled** — only the build's service account can read it.
 
 What it *cannot* do is make a client-side key invisible to the people running your app.
 
-> [!WARNING]
-> **The real protection is an API-key restriction, not secrecy.** In Google AI Studio → API keys, add an **HTTP-referrer restriction** for `https://tcc-raptor-retail-*.run.app/*` and limit the key to the Generative Language API. Then a copied key is useless from any other origin.
-
-> [!NOTE]
-> The only way to keep the key truly private would be to add a small backend that holds it and proxies calls to Gemini — a larger change, out of scope for a static deploy.
 
 ---
 
