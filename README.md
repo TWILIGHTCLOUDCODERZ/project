@@ -11,7 +11,7 @@
 
 **🔗 Live:** <https://tcc-raptor-retail-ru2czwsr6a-el.a.run.app>
 
-**Created by** Deepan Raj — Senior Solution Architect (Azure, AWS & GCP) · **TCC RAPTOR** · [deepanraj.vellingiri@tccraptor.com](mailto:deepanrey@gmail.com)
+**Created by** Deepan Raj — Senior Solution Architect (Azure, AWS & GCP) · **TCC RAPTOR** · [deepanrey@gmail.com](mailto:deepanrey@gmail.com)
 
 ---
 
