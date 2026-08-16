@@ -278,7 +278,7 @@ const features = [
   { icon: <Maximize2 className="w-5 h-5" />, title: 'Full-Size Image Viewer', desc: 'Generated try-on results can be viewed at full resolution in an immersive lightbox.' },
 ];
 
-const YOUTUBE_VIDEO_ID = 'DuPLqDSW6oo';
+const YOUTUBE_VIDEO_ID = 'IXFocPEiQ4w';
 const videoEmbedSrc = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1`;
 const videoThumbnail = `https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/maxresdefault.jpg`;
 
