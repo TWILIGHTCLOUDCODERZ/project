@@ -1,0 +1,67 @@
+# Cloud Build pipeline for the TCC RAPTOR Vite SPA.
+#
+# Builds the container (injecting the client-side Gemini key from Secret
+# Manager at BUILD time, because Vite inlines VITE_* at build), pushes it to
+# Artifact Registry, and deploys to Cloud Run.
+#
+# Run:  gcloud builds submit --config cloudbuild.yaml
+#
+# One-time prerequisites (see DEPLOYMENT steps): Artifact Registry repo,
+# the Secret Manager secret, and IAM roles on the Cloud Build service account.
+
+substitutions:
+  _REGION: asia-south1
+  _SERVICE: tcc-raptor-retail
+  _REPO: cloud-run-source-deploy
+  _SECRET: VITE_GEMINI_API_KEY
+
+steps:
+  # 1) Build. The secret is exposed to this step as $$VITE_GEMINI_API_KEY and
+  #    passed to Docker as a build-arg so Vite can inline it into the bundle.
+  - id: Build
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    secretEnv: ['VITE_GEMINI_API_KEY']
+    args:
+      - -c
+      - |
+        docker build \
+          --build-arg VITE_GEMINI_API_KEY="$$VITE_GEMINI_API_KEY" \
+          -t "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:latest" \
+          .
+
+  # 2) Push the image to Artifact Registry.
+  - id: Push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:latest
+
+  # 3) Deploy the image to Cloud Run.
+  - id: Deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:latest
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=512Mi
+      - --cpu=1
+      - --min-instances=0
+      - --max-instances=10
+
+images:
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:latest
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/${PROJECT_ID}/secrets/${_SECRET}/versions/latest
+      env: VITE_GEMINI_API_KEY
+
+options:
+  logging: CLOUD_LOGGING_ONLY

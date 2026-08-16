@@ -1,0 +1,20 @@
+# Controls what `gcloud builds submit` / `gcloud run deploy --source .`
+# uploads to Cloud Build. Keep the upload small and deterministic.
+# This project is not (yet) a git repo, so gcloud does not fall back to
+# .gitignore — list exclusions explicitly.
+
+.git/
+.gitignore
+node_modules/
+dist/
+.vscode/
+.idea/
+*.log
+.DS_Store
+.bolt/
+
+# Secrets never leave the machine — the Gemini key is injected at build time
+# from Secret Manager, not from a file in the build context.
+.env
+.env.local
+.env.*.local

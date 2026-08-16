@@ -1,0 +1,33 @@
+# Build artifacts
+dist/
+node_modules/
+
+# Environment — never ship .env into the image. The build-time VITE_ vars
+# are injected from Secret Manager via --build-arg (see cloudbuild.yaml).
+.env
+.env.local
+.env.*.local
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Docker
+Dockerfile
+.dockerignore
+
+# CI
+.github/
+
+# Docs
+README.md
+DEPLOYMENT.md
+
+# Misc
+*.log
+.DS_Store
+.bolt/

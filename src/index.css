@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #102a43;
+  }
+
+  ::selection {
+    background-color: rgba(9, 103, 210, 0.15);
+    color: #001845;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  button, [role="button"] {
+    cursor: pointer;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bg-white\/8 {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .border-white\/12 {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@layer components {
+  /* "Try On Store" glow — soft sky-blue bloom on dark backgrounds */
+  .text-glow-accent {
+    color: #93c5fd;
+    text-shadow:
+      0 0 6px rgba(147, 197, 253, 0.55),
+      0 0 18px rgba(147, 197, 253, 0.28),
+      0 0 40px rgba(9, 103, 210, 0.18);
+  }
+}
+
+/* ── Hero Ken Burns animations ─────────────────────────────── */
+@keyframes ken-burns-1 {
+  0%   { transform: scale(1.08) translate(1%, 0%); }
+  100% { transform: scale(1.0)  translate(-1%, -1%); }
+}
+@keyframes ken-burns-2 {
+  0%   { transform: scale(1.0)  translate(-1%, -1%); }
+  100% { transform: scale(1.08) translate(1%,  0%); }
+}
+@keyframes ken-burns-3 {
+  0%   { transform: scale(1.06) translate(0%,  1%); }
+  100% { transform: scale(1.0)  translate(0%, -1%); }
+}
+
+.hero-slide-active {
+  animation-duration: 7000ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+.hero-kb-1 { animation-name: ken-burns-1; }
+.hero-kb-2 { animation-name: ken-burns-2; }
+.hero-kb-3 { animation-name: ken-burns-3; }
