@@ -13,6 +13,13 @@ dist/
 .DS_Store
 .bolt/
 
+# Docs & README images — not needed in the container build
+README.md
+DEPLOYMENT.md
+ARCHITECTURE.md
+docs/
+src/public/aries-*.png
+
 # Secrets never leave the machine — the Gemini key is injected at build time
 # from Secret Manager, not from a file in the build context.
 .env

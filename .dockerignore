@@ -26,6 +26,9 @@ Dockerfile
 # Docs
 README.md
 DEPLOYMENT.md
+ARCHITECTURE.md
+docs/
+src/public/aries-*.png
 
 # Misc
 *.log
